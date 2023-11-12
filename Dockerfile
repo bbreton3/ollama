@@ -21,7 +21,7 @@ RUN go generate ./... \
 
 
 # Final Stage
-FROM alpine:latest
+FROM ubuntu:20.04
 
 # Install ca-certificates and other necessary tools
 RUN apk --no-cache add ca-certificates
