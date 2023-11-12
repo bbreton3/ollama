@@ -23,12 +23,12 @@ RUN go generate ./... \
 FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y ca-certificates
 COPY --from=0 /go/src/github.com/jmorganca/ollama/ollama /bin/ollama
-COPY pull-model.sh /bin/pull-model.sh 
-RUN chmod +x /bin/pull-model.sh
+# COPY pull-model.sh /bin/pull-model.sh 
+# RUN chmod +x /bin/pull-model.sh
 
 
-# Launch the download of the model using the script
-RUN /bin/pull-model.sh
+# # Launch the download of the model using the script
+# RUN /bin/pull-model.sh
 
 EXPOSE 11434
 ENV OLLAMA_HOST 0.0.0.0
