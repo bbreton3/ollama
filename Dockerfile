@@ -1,10 +1,8 @@
-# Build Stage
 # Start with the official Go image
 FROM golang:1.21.3 as builder
 
 # Set build arguments and environment variables
 ARG TARGETARCH
-ENV GOFLAGS='-ldflags=-w -s'
 ENV GOARCH=$TARGETARCH
 
 # Set the working directory inside the container
@@ -18,7 +16,8 @@ COPY . .
 
 # Generate and build your application
 RUN go generate ./... \
-    && go build .
+    && go build -ldflags '-w -s' .
+
 
 
 # Final Stage
