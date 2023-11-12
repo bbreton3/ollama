@@ -1,19 +1,25 @@
 # Build Stage
-FROM nvidia/cuda:11.8.0-devel-ubuntu22.04 as builder
+# Start with the official Go image
+FROM golang:1.21.3 as builder
 
+# Set build arguments and environment variables
 ARG TARGETARCH
-ARG GOFLAGS="'-ldflags=-w -s'"
-
-WORKDIR /go/src/github.com/jmorganca/ollama
-RUN apt-get update && apt-get install -y git build-essential cmake
-ADD https://dl.google.com/go/go1.21.3.linux-$TARGETARCH.tar.gz /tmp/go1.21.3.tar.gz
-RUN mkdir -p /usr/local && tar xz -C /usr/local </tmp/go1.21.3.tar.gz
-
-COPY . .
+ENV GOFLAGS='-ldflags=-w -s'
 ENV GOARCH=$TARGETARCH
-ENV GOFLAGS=$GOFLAGS
-RUN /usr/local/go/bin/go generate ./... \
-    && /usr/local/go/bin/go build .
+
+# Set the working directory inside the container
+WORKDIR /go/src/github.com/jmorganca/ollama
+
+# Install additional dependencies if needed
+RUN apt-get update && apt-get install -y git build-essential cmake
+
+# Copy your source code into the container
+COPY . .
+
+# Generate and build your application
+RUN go generate ./... \
+    && go build .
+
 
 # Final Stage
 FROM alpine:latest
